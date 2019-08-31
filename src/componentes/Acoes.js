@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { Alert } from 'reactstrap'
+import { InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
 
 function Acoes() {
     const [nome, setNome] = useState('')
-    const [qtd, setQtd ] = useState(0)
+    const [qtd, setQtd] = useState(0)
     const [valor, setValor] = useState(0)
     const [data, setData] = useState([])
+    const [success, setSucess] = useState(false)
 
     const onChangeNome = evt => {
         setNome(evt.target.value)
@@ -28,12 +30,12 @@ function Acoes() {
 
     const save = () => {
         axios.post('/produto', {
-            nome,
-            qtd,
-            valor
+            "nome": nome,
+            "quantidade": qtd,
+            "valor": valor
         })
             .then(resp => {
-                //setSucess(true)
+                setSucess(true)
             })
     }
 
@@ -64,32 +66,38 @@ onClick={() => deleteSerie(record.id)}> Remover </button> --> */
         } catch (error) {
         }
     }
+
+
+    if (success)
+        return <Redirect to='/acoes' />
+
     return (
         <div className='container'>
-            <h1 align='center'> Produtos  {valor}</h1>
-            <pre>{JSON.stringify(data) }</pre>
-
+            <h1 align='center'> Produtos</h1>
             <form >
                 <div className='form-group'>
-                    <label>Nome</label>
-                    <input type='text' value={nome} 
-                    onChange={onChangeNome} id='name' placeholder='Nome' />
+                    <InputGroup>
+                        <InputGroupAddon addonType='prepend'>Nome: </InputGroupAddon>
+                        <input required type='text' value={nome} onChange={onChangeNome}
+                            className='form-control' id='name' placeholder='Nome do item' />
+                    </InputGroup>
                 </div>
-
                 <div className='form-group'>
-                <label>Quantidade</label>
-                <input type='number' value={qtd} 
-                onChange={onChangeQtd} id='name' placeholder='QTD' />
+                    <InputGroup>
+                        <InputGroupAddon addonType='prepend'>Quantidade: </InputGroupAddon>
+                        <input type='number' value={qtd} onChange={onChangeQtd}
+                            className='form-control' id='name' placeholder='Quantidade de itens' />
+                    </InputGroup>
                 </div>
-
                 <div className='form-group'>
-                <label>Valor</label>
-                <input type='text' value={valor} 
-                onChange={onChangeValor} id='name' placeholder='Valor' />
+                    <InputGroup>
+                        <InputGroupAddon addonType='prepend'>R$: </InputGroupAddon>
+                        <input type='number' value={valor} onChange={onChangeValor}
+                            className='form-control' id='name' placeholder='Valor' />
+                    </InputGroup>
                 </div>
-
-            <button onClick={validar} className='btn btn-primary'>
-                Salvar
+                <button onClick={save} className='btn btn-primary'>
+                    Salvar
             </button>
             </form>
 
@@ -104,9 +112,7 @@ onClick={() => deleteSerie(record.id)}> Remover </button> --> */
                     </tr>
                 </thead>
                 <tbody>
-
                     {data.map(renderizaLinha)}
-
                 </tbody>
             </table>
         </div>
