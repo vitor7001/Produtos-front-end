@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Link, Redirect } from 'react-router-dom'
-import { Alert } from 'reactstrap'
-import { InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
+import { Link } from 'react-router-dom'
+import { InputGroup, InputGroupAddon} from 'reactstrap';
 
 function Acoes() {
     const [nome, setNome] = useState('')
     const [qtd, setQtd] = useState(0)
     const [valor, setValor] = useState(0)
     const [data, setData] = useState([])
-    const [success, setSucess] = useState(false)
+    const [salvou, setSalvou] = useState(false)
 
     const onChangeNome = evt => {
         setNome(evt.target.value)
@@ -26,7 +25,13 @@ function Acoes() {
             .then(res => {
                 setData(res.data)
             })
-    }, [])
+    }, [salvou])
+
+    const limparCampos = () =>{
+        setNome('')
+        setQtd(0)
+        setValor(0)
+    }
 
     const save = () => {
         axios.post('/produto', {
@@ -35,7 +40,9 @@ function Acoes() {
             "valor": valor
         })
             .then(resp => {
-                setSucess(true)
+                //setSucess(true)
+                setSalvou(!salvou)
+                limparCampos()
             })
     }
 
@@ -49,7 +56,9 @@ onClick={() => deleteSerie(record.id)}> Remover </button> --> */
                 </th>
                 <td>{record.nome}</td>
                 <td>{record.quantidade}</td>
-                <td>{record.valor}</td>
+
+                <td>{record.valor.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</td>
+
                 <td>
                     <Link className='btn btn-primary'
                         to={'/produto/' + record.id}>Info</Link>
@@ -57,19 +66,6 @@ onClick={() => deleteSerie(record.id)}> Remover </button> --> */
             </tr>
         )
     }
-
-
-
-    const validar = () => {
-        try {
-            save()
-        } catch (error) {
-        }
-    }
-
-
-    if (success)
-        return <Redirect to='/acoes' />
 
     return (
         <div className='container'>
@@ -96,10 +92,12 @@ onClick={() => deleteSerie(record.id)}> Remover </button> --> */
                             className='form-control' id='name' placeholder='Valor' />
                     </InputGroup>
                 </div>
-                <button onClick={save} className='btn btn-primary'>
+               
+            </form>
+
+            <button onClick={save} className='btn btn-primary'>
                     Salvar
             </button>
-            </form>
 
             <table className='table  table-dark'>
                 <thead>

@@ -7,6 +7,7 @@ function Painel() {
     <div className='container mt-5' align='center'>
       <Jumbotron className='painel' align='center'>
         <h1 className='display-3'>Produtos</h1>
+        <hr className='my-2' />
         <p className='lead'>Um app para consumir uma api rest
         </p>
         <hr className='my-2' />
