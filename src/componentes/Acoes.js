@@ -4,11 +4,12 @@ import { Link } from 'react-router-dom'
 import { InputGroup, InputGroupAddon} from 'reactstrap';
 
 function Acoes() {
-    const [nome, setNome] = useState('')
-    const [qtd, setQtd] = useState(0)
-    const [valor, setValor] = useState(0)
+    const [nome, setNome] = useState()
+    const [qtd, setQtd] = useState()
+    const [valor, setValor] = useState()
     const [data, setData] = useState([])
     const [salvou, setSalvou] = useState(false)
+    const [erros, setErros] = useState([])
 
     const onChangeNome = evt => {
         setNome(evt.target.value)
@@ -28,9 +29,10 @@ function Acoes() {
     }, [salvou])
 
     const limparCampos = () =>{
-        setNome('')
-        setQtd(0)
-        setValor(0)
+        setNome()
+        setQtd()
+        setValor()
+        setErros([])
     }
 
     const save = () => {
@@ -38,11 +40,12 @@ function Acoes() {
             "nome": nome,
             "quantidade": qtd,
             "valor": valor
-        })
-            .then(resp => {
-                //setSucess(true)
+        }).then(resp => {
                 setSalvou(!salvou)
                 limparCampos()
+            }).catch(e =>{
+                console.log(e.response.data.errors)
+                setErros(e.response.data.errors)
             })
     }
 
@@ -67,9 +70,33 @@ onClick={() => deleteSerie(record.id)}> Remover </button> --> */
         )
     }
 
+
+    const renderizaErros = record =>{
+        //console.log(record)
+        return (
+            
+                
+                    <li key={Math.random()}> 
+                    Campo <b>{record.field}</b> - {record.defaultMessage}
+                    </li> 
+                
+            
+        )
+    }
+
     return (
         <div className='container'>
             <h1 align='center'> Produtos</h1>
+
+            {
+                setErros !== [] &&
+                <div className='container'>
+                    <ul>
+                        {erros.map(renderizaErros)}
+                    </ul>
+                </div>
+            }
+
             <form >
                 <div className='form-group'>
                     <InputGroup>
