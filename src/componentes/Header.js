@@ -32,13 +32,13 @@ function Header() {
             <NavItem>
               <NavLink tag={Link} to='/acoes' className='opc'>
                 Ações
-                        </NavLink>
+              </NavLink>
             </NavItem>
 
             <NavItem>
               <NavLink tag={Link} to='/' className='opc'>
                 Info
-                        </NavLink>
+              </NavLink>
             </NavItem>
 
             <NavItem>

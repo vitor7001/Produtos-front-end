@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
-import { InputGroup, InputGroupAddon} from 'reactstrap';
+import { InputGroup, InputGroupAddon, Alert } from 'reactstrap';
 
 function Acoes() {
     const [nome, setNome] = useState()
@@ -29,9 +29,9 @@ function Acoes() {
     }, [salvou])
 
     const limparCampos = () =>{
-        setNome()
-        setQtd()
-        setValor()
+        setNome("")
+        setQtd("")
+        setValor("")
         setErros([])
     }
 
@@ -72,28 +72,24 @@ onClick={() => deleteSerie(record.id)}> Remover </button> --> */
 
 
     const renderizaErros = record =>{
-        //console.log(record)
         return (
-            
-                
-                    <li key={Math.random()}> 
-                    Campo <b>{record.field}</b> - {record.defaultMessage}
-                    </li> 
-                
-            
+            <Alert color="danger">
+                Campo <b>{record.field}</b> - {record.defaultMessage}
+            </Alert>
         )
     }
 
     return (
         <div className='container'>
             <h1 align='center'> Produtos</h1>
+            <br/>
 
             {
                 setErros !== [] &&
-                <div className='container'>
-                    <ul>
+                <div>
+                    
                         {erros.map(renderizaErros)}
-                    </ul>
+                    
                 </div>
             }
 
