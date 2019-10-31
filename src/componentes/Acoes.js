@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
-import { InputGroup, InputGroupAddon, Alert } from 'reactstrap';
+import { InputGroup, InputGroupAddon, Alert, Button } from 'reactstrap';
 
 function Acoes() {
-    const [nome, setNome] = useState()
-    const [qtd, setQtd] = useState()
+    const [id, setId]       = useState()
+    const [nome, setNome]   = useState()
+    const [qtd, setQtd]     = useState()
     const [valor, setValor] = useState()
-    const [data, setData] = useState([])
+    const [data, setData]   = useState([])
     const [salvou, setSalvou] = useState(false)
     const [erros, setErros] = useState([])
 
@@ -21,6 +22,8 @@ function Acoes() {
         setValor(evt.target.value)
     }
 
+
+
     useEffect(() => {
         axios.get('/produtos')
             .then(res => {
@@ -29,6 +32,7 @@ function Acoes() {
     }, [salvou])
 
     const limparCampos = () =>{
+        setId("")
         setNome("")
         setQtd("")
         setValor("")
@@ -36,21 +40,55 @@ function Acoes() {
     }
 
     const save = () => {
-        axios.post('/produto', {
-            "nome": nome,
-            "quantidade": qtd,
-            "valor": valor
-        }).then(resp => {
-                setSalvou(!salvou)
-                limparCampos()
-            }).catch(e =>{
-                console.log(e.response.data.errors)
-                setErros(e.response.data.errors)
-            })
+
+        //condição caso não exista id
+        //ou seja, não foi clicado no botão, será salvo um novo produto
+        if(!id){
+            axios.post('/produto', {
+                "nome": nome,
+                "quantidade": qtd,
+                "valor": valor
+            }).then(resp => {
+                    setSalvou(!salvou)
+                    limparCampos()
+                    alert("Produto salvo com sucesso!")
+                }).catch(e =>{
+                    console.log(e.response.data.errors)
+                    setErros(e.response.data.errors)
+                })
+        }else{
+            console.log("Atualizando...")
+            axios.put('/produto', {
+                "id"    : id,
+                "nome"  : nome,
+                "quantidade": qtd,
+                "valor" : valor
+            }).then(resp => {
+                    setSalvou(!salvou)
+                    limparCampos()
+                    alert("Produto atualizado com sucesso!")
+                }).catch(e =>{
+                    console.log(e.response.data.errors)
+                    setErros(e.response.data.errors)
+                })
+        }
+
+
+ 
+    }
+
+    const editar = record =>{
+        console.log(record.id)
+        setId(record.id)
+        setNome(record.nome)
+        setQtd(record.quantidade)
+        setValor(record.valor)
     }
 
     /*<!-- <button className='btn btn-danger' 
-onClick={() => deleteSerie(record.id)}> Remover </button> --> */
+onClick={() => deleteSerie(record.id)}> Remover </button> --> 
+<Link className='btn btn-primary'
+to={'/produto/' + record.id}>Info</Link>*/
     const renderizaLinha = record => {
         return (
             <tr key={record.id} align='center'>
@@ -63,8 +101,12 @@ onClick={() => deleteSerie(record.id)}> Remover </button> --> */
                 <td>{record.valor.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</td>
 
                 <td>
-                    <Link className='btn btn-primary'
-                        to={'/produto/' + record.id}>Info</Link>
+                 
+                <Button onClick={() => editar(record)} color='info'>Info</Button>
+
+                <Button color='danger'>Info</Button>
+
+
                 </td>
             </tr>
         )
