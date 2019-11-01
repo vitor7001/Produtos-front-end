@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
-import { InputGroup, InputGroupAddon, Alert, Button } from 'reactstrap';
+import { InputGroup, InputGroupAddon, Alert, Button, Label} from 'reactstrap';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+
+import { library } from '@fortawesome/fontawesome-svg-core';
+import {faInfoCircle, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
+
+library.add(faInfoCircle, faTrashAlt);
+
 
 function Acoes() {
     const [id, setId]       = useState()
@@ -102,9 +110,15 @@ to={'/produto/' + record.id}>Info</Link>*/
 
                 <td>
                  
-                <Button onClick={() => editar(record)} color='info'>Info</Button>
+                <Button onClick={() => editar(record)} color='info'>
+                <FontAwesomeIcon
+                icon="info-circle" />
+                </Button>
 
-                <Button color='danger'>Info</Button>
+                <Button color='danger'>
+                <FontAwesomeIcon
+                icon="trash-alt" /> 
+                </Button>
 
 
                 </td>

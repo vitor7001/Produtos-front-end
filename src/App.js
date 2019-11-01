@@ -5,6 +5,8 @@ import Painel from './componentes/Painel'
 import Acoes from './componentes/Acoes'
 import Info from './componentes/info/Info'
 
+
+
 import {
   BrowserRouter as Router,
   Route,
